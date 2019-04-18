@@ -26,11 +26,6 @@
 
 #include "buffer.h"
 #include "stdint.h"
-/***************************************************************************************
-Generic buffer the type of it push or pop depends on how it is been accessed. 
-The implementation will determine if it is a FIFO or a LIFO. 
-***************************************************************************************/
-
 
 
 
