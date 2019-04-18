@@ -30,15 +30,11 @@
 Generic buffer the type of it push or pop depends on how it is been accessed. 
 The implementation will determine if it is a FIFO or a LIFO. 
 ***************************************************************************************/
-typedef struct {
-uint8_t     data[BUFFER_MAX_SIZE];  // data buffer
-uint16_t    head;                          // index of the first item, initial is zero
-uint16_t    tail;                          // index of the last item, initial is at the circular buffer tail
-volatile B_status_e  is_empty;             // if the buffer is empty, initially is empty
-volatile B_status_e  is_full;              // if the buffer is full, initially is not
-}buffer_t;
 
-*buffer_t fifo_buffer_init(buffer_t *buffer){
+
+
+
+buffer_t* fifo_buffer_init(buffer_t *buffer){
 	*buffer->head = 0;
 	*buffer->tail = BUFFER_MAX_SIZE;
 	*buffer->is_empty = B_EMPTY;

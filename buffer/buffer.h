@@ -22,8 +22,9 @@
 #ifndef __BUFFER_H__
 #define __BUFFER_H__
 
+#include "stdint.h"
 //      Define your max buffer size here, take care about your available memory    //
-#define BUFFER_MAX_SIZE
+#define BUFFER_MAX_SIZE    10
 // Buffer status enumerations
 typedef enum {
 	B_FULL,
@@ -37,8 +38,15 @@ typedef enum {
 	B_NULL
 }B_status_e;
 
+typedef struct {
+uint8_t     data[BUFFER_MAX_SIZE];  // data buffer
+uint16_t    head;                          // index of the first item, initial is zero
+uint16_t    tail;                          // index of the last item, initial is at the circular buffer tail
+volatile B_status_e  is_empty;             // if the buffer is empty, initially is empty
+volatile B_status_e  is_full;              // if the buffer is full, initially is not
+}buffer_t;
+//struct buffer_s;  // Struct declartion
 
-typedef struct buffer_t;  // Struct declartion
 /*
  * @brief push one byte data into a FIFO circular buffer
  *
