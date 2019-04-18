@@ -26,10 +26,10 @@
 
 #include "buffer.h"
 #include "stdint.h"
+#include "stdlib.h"
 
 
-
-buffer_t* fifo_buffer_init(buffer_t buffer){
+buffer_t* fifo_buffer_init(buffer_t *buffer){	
 	buffer->head = 0;
 	buffer->tail = BUFFER_MAX_SIZE;
 	buffer->is_empty = B_EMPTY;
@@ -39,7 +39,7 @@ buffer_t* fifo_buffer_init(buffer_t buffer){
 ///////==================================================================///////////////////
 /******************************************************************************************/
 ///////==================================================================///////////////////
-B_status_e fifo_buffer_push(buffer_t buffer,uint8_t item){
+B_status_e fifo_buffer_push(buffer_t *buffer,uint8_t item){
 	B_status_e status = fifo_buffer_full(buffer);
 	//**************** Check if the pointer is valid and the buffer is not full **********//
 	if(status == B_NOT_FULL){
@@ -61,7 +61,7 @@ B_status_e fifo_buffer_push(buffer_t buffer,uint8_t item){
 ///////==================================================================///////////////////
 /******************************************************************************************/
 ///////==================================================================///////////////////
-B_status_e fifo_buffer_full(buffer_t buffer){
+B_status_e fifo_buffer_full(buffer_t *buffer){
 	if(buffer == NULL){
 		return B_NULL;
 	} // ******* if the head is at 0 position and tail at the end
@@ -77,7 +77,7 @@ B_status_e fifo_buffer_full(buffer_t buffer){
 ///////==================================================================///////////////////
 /******************************************************************************************/
 ///////==================================================================///////////////////
-uint16_t fifo_available_space(buffer_t buffer){
+uint16_t fifo_available_space(buffer_t *buffer){
 	uint16_t available_space = (BUFFER_MAX_SIZE-1-(buffer->tail-buffer->head));
 	if(B_FULL == fifo_buffer_full(buffer))
 	{
@@ -92,7 +92,7 @@ uint16_t fifo_available_space(buffer_t buffer){
 ///////==================================================================///////////////////
 /******************************************************************************************/
 ///////==================================================================///////////////////
-B_status_e fifo_buffer_empty(buffer_t buffer){
+B_status_e fifo_buffer_empty(buffer_t *buffer){
 	if(buffer == NULL){
 		return B_NULL;
 	}
@@ -101,12 +101,12 @@ B_status_e fifo_buffer_empty(buffer_t buffer){
 ///////==================================================================///////////////////
 /******************************************************************************************/
 ///////==================================================================///////////////////
-uint8_t fifo_buffer_pop(buffer_t buffer){
+uint8_t fifo_buffer_pop(buffer_t *buffer){
 	uint8_t data = buffer->data[buffer->head];
-	if(buffer_t == NULL){
+	if(buffer == NULL){
 		return B_NULL;
 	}
-	if (fifo_buffer_empty(buffer)){
+	if (B_EMPTY == fifo_buffer_empty(buffer)){
 		return B_EMPTY;
 	}
 	///***  If the head and tail points to the same location it means this is the last element in the buffer ***////
@@ -125,7 +125,7 @@ uint8_t fifo_buffer_pop(buffer_t buffer){
 ///////==================================================================///////////////////
 /******************************************************************************************/
 ///////==================================================================///////////////////
-B_status_e fifo_buffer_push_array(buffer_t buffer,uint8_t *data,uint16_t length){
+B_status_e fifo_buffer_push_array(buffer_t *buffer,uint8_t *data,uint16_t length){
 	if(buffer == NULL){
 		return B_NULL;
 	}

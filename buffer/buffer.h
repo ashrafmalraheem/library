@@ -21,7 +21,7 @@
  */
 #ifndef __BUFFER_H__
 #define __BUFFER_H__
-
+#include "stdint.h"
 //      Define your max buffer size here, take care about your available memory    //
 #define BUFFER_MAX_SIZE    10
 /***************************************************************************************
