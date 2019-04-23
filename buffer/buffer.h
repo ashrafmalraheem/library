@@ -44,21 +44,22 @@ Generic buffer the type of it push or pop depends on how it is been accessed.
 The implementation will determine if it is a FIFO or a LIFO.
 ***************************************************************************************/
 typedef struct {
-uint8_t     data[BUFFER_MAX_SIZE];  // data buffer
+uint8_t     *data;                         // pointer to the array that form the buffer.
 uint16_t    head;                          // index of the first item, initial is zero
 uint16_t    tail;                          // index of the last item, initial is at the circular buffer tail
+uint16_t    max_length;                    // buffer max length
 volatile B_status_e  is_empty;             // if the buffer is empty, initially is empty
 volatile B_status_e  is_full;              // if the buffer is full, initially is not
 }buffer_t;
 
-//struct buffer_s;  // Struct declartion
+//struct buffer_s;  // Struct declaration
 
 /*
  * @brief push one byte data into a FIFO circular buffer
  *
  * This function will push one byte data into a circular FIFO buffer. Therefore, the newest
  * data will be stored at the tail of the current data stored in the buffer.
- * it aslo check whether the buffer is full or not or the buffer points to NULL
+ * it also check whether the buffer is full or not or the buffer points to NULL
  * in the buffer and it returns the result accordingly
  *
  * @param buffer pointer
@@ -74,7 +75,7 @@ B_status_e fifo_buffer_push(buffer_t *buffer,uint8_t item);
  *
  * This function will pop one byte data from a circular FIFO buffer. Therefore, the oldest
  * data will be returned. The buffer will point to the next oldest data item
- * it aslo check whether the buffer is empty or not or the buffer points to NULL
+ * it also check whether the buffer is empty or not or the buffer points to NULL
  * in the buffer and it returns the result accordingly
  *
  * @param buffer pointer
@@ -101,24 +102,26 @@ B_status_e fifo_buffer_full(buffer_t *buffer);
  * This function should be called before any pop request.
  *
  * @param buffer pointer
- * @return emptyness status of the buffer
+ * @return emptiness status of the buffer
  */
 B_status_e fifo_buffer_empty(buffer_t *buffer);
 
 
 /*
- * @brief initilize empty buffer
+ * @brief initialize empty buffer
  *
  * This function will initialize an empty buffer and returns its address
- * if it fails on inilialize it will return NULL
+ * if it fails on initialize it will return NULL
  * It assigns the initial value of the head which is 0
  * It assigns the initial value of the tail which is BUFFER_MAX_SIZE
  * Buffer status flags (is_empty and is_full) are initialized also
  *
  * @param buffer pointer
+ * @param array pointer
+ * @param max length value
  * @return address of the buffer
  */
-buffer_t* fifo_buffer_init(buffer_t *buffer);
+buffer_t* fifo_buffer_init(buffer_t *buffer,uint8_t *array,uint16_t length);
 
 /*
  * @brief push a array of data into the FIFO buffer
@@ -127,7 +130,7 @@ buffer_t* fifo_buffer_init(buffer_t *buffer);
  * available space is sufficient or not. It returns the result of the push
  *
  * @param buffer pointer
- * @param data arry pointer
+ * @param data array pointer
  * @param length of data
  * @return status of the push
  */
