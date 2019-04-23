@@ -43,11 +43,11 @@ B_status_e fifo_buffer_push(buffer_t *buffer,uint8_t item){
 	B_status_e status = fifo_buffer_full(buffer);
 	//**************** Check if the pointer is valid and the buffer is not full **********//
 	if(status == B_NOT_FULL){
+            // if the buffer is empty don't increment the tail
         if(buffer->is_empty != B_EMPTY){
           buffer->tail++;  // increment to point to the next empty location
-		                 //   if the tail in the last position of the array move it to the first one
         }
-
+            // if the tail is at the end of the memory, jump to location 0 of the memory
 		if(buffer->tail >= BUFFER_MAX_SIZE){
 			buffer->tail = 0;
 		}
