@@ -23,7 +23,7 @@
 #define __BUFFER_H__
 #include "stdint.h"
 //      Define your max buffer size here, take care about your available memory    //
-#define BUFFER_MAX_SIZE    10
+#define BUFFER_MAX_SIZE    20
 /***************************************************************************************
                           Buffer Status Enums
 ***************************************************************************************/
@@ -40,8 +40,8 @@ typedef enum {
 }B_status_e;
 
 /***************************************************************************************
-Generic buffer the type of it push or pop depends on how it is been accessed. 
-The implementation will determine if it is a FIFO or a LIFO. 
+Generic buffer the type of it push or pop depends on how it is been accessed.
+The implementation will determine if it is a FIFO or a LIFO.
 ***************************************************************************************/
 typedef struct {
 uint8_t     data[BUFFER_MAX_SIZE];  // data buffer

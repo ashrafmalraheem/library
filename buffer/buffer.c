@@ -2,16 +2,16 @@
  * Copyright (C) 2018 by Ashraf Abdalraheem
  *
  * Redistribution, modification or use of this software in source or binary
- * forms is permitted as long as the files maintain this copyright. Users are 
+ * forms is permitted as long as the files maintain this copyright. Users are
  * permitted to modify this and use it to learn about the field of embedded
  * software. Ashraf Abdalraheem are not liable for any
- * misuse of this material. 
+ * misuse of this material.
  *****************************************************************************/
 /**
  * @file buffer.c
  * @brief Different buffers types
  *
- * This implement buffer type such as FIFO and LIFO circular buffer to handle 
+ * This implement buffer type such as FIFO and LIFO circular buffer to handle
  * the data in slow peripherals. The implementation files contain the functions
  * that access these buffers.
  *
@@ -19,7 +19,7 @@
  * @date April 18 2019
  *
  */
- 
+
 ////////////////////////////////////////////////////////////////////////////////////////
                    /* enter necessary header files for visibility */
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -29,9 +29,9 @@
 #include "stdlib.h"
 
 
-buffer_t* fifo_buffer_init(buffer_t *buffer){	
+buffer_t* fifo_buffer_init(buffer_t *buffer){
 	buffer->head = 0;
-	buffer->tail = BUFFER_MAX_SIZE;
+	buffer->tail = 0;  // point to the first location
 	buffer->is_empty = B_EMPTY;
 	buffer->is_full  = B_NOT_FULL;
 	return buffer;
@@ -43,12 +43,13 @@ B_status_e fifo_buffer_push(buffer_t *buffer,uint8_t item){
 	B_status_e status = fifo_buffer_full(buffer);
 	//**************** Check if the pointer is valid and the buffer is not full **********//
 	if(status == B_NOT_FULL){
-		
-		//   if the tail in the last position of the array move it to the first one
-		if(buffer->tail == BUFFER_MAX_SIZE){
+        if(buffer->is_empty != B_EMPTY){
+          buffer->tail++;  // increment to point to the next empty location
+		                 //   if the tail in the last position of the array move it to the first one
+        }
+
+		if(buffer->tail >= BUFFER_MAX_SIZE){
 			buffer->tail = 0;
-		}else{
-			buffer->tail++;
 		}
 		buffer->data[buffer->tail]=item;
 		buffer->is_empty = B_NOT_EMPTY;
@@ -66,7 +67,7 @@ B_status_e fifo_buffer_full(buffer_t *buffer){
 		return B_NULL;
 	} // ******* if the head is at 0 position and tail at the end
 	  // ******* it means it is full Or the tail is just before the head
-	if(((buffer->tail - buffer->head) == (BUFFER_MAX_SIZE - 1)) 
+	if(((buffer->tail - buffer->head) == (BUFFER_MAX_SIZE - 1))
 		|| ((buffer->head - buffer->tail) == 1))
 	{
 		buffer->is_full = B_FULL;
@@ -129,7 +130,7 @@ B_status_e fifo_buffer_push_array(buffer_t *buffer,uint8_t *data,uint16_t length
 	if(buffer == NULL){
 		return B_NULL;
 	}
-	if(length < fifo_available_space(buffer)){
+	if(length > fifo_available_space(buffer)){
 		return B_NO_ENOUGH_SPACE;
 	}
 	for(uint16_t i=0;i<length;i++){
