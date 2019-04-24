@@ -129,13 +129,14 @@ uint8_t fifo_buffer_pop(buffer_t *buffer){
 /******************************************************************************************/
 ///////==================================================================///////////////////
 B_status_e fifo_buffer_push_array(buffer_t *buffer,uint8_t *data,uint16_t length){
+	uint16_t i=0;
 	if(buffer == NULL){
 		return B_NULL;
 	}
 	if(length > fifo_available_space(buffer)){
 		return B_NO_ENOUGH_SPACE;
 	}
-	for(uint16_t i=0;i<length;i++){
+	for(;i<length;i++){
 		fifo_buffer_push(buffer,*(data+i));
 	}
 	return B_NO_ERROR;
