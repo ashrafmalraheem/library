@@ -4,7 +4,7 @@
  * Redistribution, modification or use of this software in source or binary
  * forms is permitted as long as the files maintain this copyright. Users are
  * permitted to modify this and use it to learn about the field of embedded
- * software. Ashraf Abdalraheem are not liable for any
+ * software. SEDC are not liable for any
  * misuse of this material.
  *****************************************************************************/
 /**
@@ -95,6 +95,12 @@ uint16_t fifo_available_space(buffer_t *buffer){
 ///////==================================================================///////////////////
 /******************************************************************************************/
 ///////==================================================================///////////////////
+uint16_t fifo_filled_space(buffer_t* buffer){
+	return (buffer->max_length - fifo_available_space(buffer));
+}
+///////==================================================================///////////////////
+/******************************************************************************************/
+///////==================================================================///////////////////
 B_status_e fifo_buffer_empty(buffer_t *buffer){
 	if(buffer == NULL){
 		return B_NULL;
@@ -129,7 +135,7 @@ uint8_t fifo_buffer_pop(buffer_t *buffer){
 /******************************************************************************************/
 ///////==================================================================///////////////////
 B_status_e fifo_buffer_push_array(buffer_t *buffer,uint8_t *data,uint16_t length){
-	uint16_t i=0;
+    uint16_t i=0;
 	if(buffer == NULL){
 		return B_NULL;
 	}
@@ -138,6 +144,22 @@ B_status_e fifo_buffer_push_array(buffer_t *buffer,uint8_t *data,uint16_t length
 	}
 	for(;i<length;i++){
 		fifo_buffer_push(buffer,*(data+i));
+	}
+	return B_NO_ERROR;
+}
+///////==================================================================///////////////////
+/******************************************************************************************/
+///////==================================================================///////////////////
+B_status_e fifo_buffer_pop_array(buffer_t *buffer,uint8_t *data,uint16_t length){
+    uint16_t i=0;
+	if(buffer == NULL){
+		return B_NULL;
+	}
+	if(length > fifo_filled_space(buffer)){
+		return B_NOT_FULL;
+	}
+	for(;i<length;i++){
+		*(data+i) = fifo_buffer_pop(buffer);
 	}
 	return B_NO_ERROR;
 }

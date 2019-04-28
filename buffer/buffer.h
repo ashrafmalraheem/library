@@ -23,7 +23,7 @@
 #define __BUFFER_H__
 #include "stdint.h"
 //      Define your max buffer size here, take care about your available memory    //
-#define BUFFER_MAX_SIZE    20
+#define BUFFER_MAX_SIZE    100
 /***************************************************************************************
                           Buffer Status Enums
 ***************************************************************************************/
@@ -137,6 +137,20 @@ buffer_t* fifo_buffer_init(buffer_t *buffer,uint8_t *array,uint16_t length);
 B_status_e fifo_buffer_push_array(buffer_t *buffer,uint8_t *data,uint16_t length);
 
 /*
+ * @brief pop a array of data from the FIFO buffer
+ *
+ * This function pop an array of data from the buffer after it checks if the
+ * filled space is greater than required or not. It returns the result of the pop.
+ * If successed it return B_NO_ERROR
+ *
+ * @param buffer pointer
+ * @param data array pointer
+ * @param length of data
+ * @return status of the pop
+ */
+B_status_e fifo_buffer_pop_array(buffer_t *buffer,uint8_t *data,uint16_t length);
+
+/*
  * @brief Check the available free space in the buffer
  *
  * This function will check the available space in the buffer and it
@@ -146,4 +160,15 @@ B_status_e fifo_buffer_push_array(buffer_t *buffer,uint8_t *data,uint16_t length
  * @return available free space
  */
 uint16_t fifo_available_space(buffer_t *buffer);
+
+/*
+ * @brief Check the occupied space in the buffer
+ *
+ * This function will check the occupied space in the buffer and it
+ * it returns the number of filled spaces in the specified buffer.
+ *
+ * @param buffer pointer
+ * @return filled space
+ */
+uint16_t fifo_filled_space(buffer_t* buffer);
 #endif /*__BUFFER_H__*/
